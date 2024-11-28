@@ -1,0 +1,81 @@
+---
+import { Heart, ShoppingBag } from 'lucide-astro';
+import WishlistButton from './WishlistButton.astro';
+
+interface Props {
+  id: number;
+  title: string;
+  price: string;
+  image: string;
+  category: string;
+  stores?: string[];
+  variant?: 'default' | 'featured' | 'compact';
+}
+
+const { id, title, price, image, category, stores = ['Amazon', 'Best Buy', 'Target'], variant = 'default' } = Astro.props;
+
+const cardClasses = {
+  default: 'p-6',
+  featured: 'p-8',
+  compact: 'p-4'
+};
+
+const imageClasses = {
+  default: 'aspect-square',
+  featured: 'aspect-[4/3]',
+  compact: 'aspect-square'
+};
+
+const titleClasses = {
+  default: 'text-lg',
+  featured: 'text-xl',
+  compact: 'text-base'
+};
+---
+
+<div class="group animate-slide-up">
+  <div class="relative overflow-hidden rounded-2xl bg-white shadow-sm hover:shadow-md transition-all duration-300">
+    <a href={`/product/${id}`} class="block">
+      <div class={`overflow-hidden ${imageClasses[variant]}`}>
+        <img 
+          src={image} 
+          alt={title} 
+          class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" 
+        />
+      </div>
+      <div class="absolute top-4 left-4">
+        <span class="inline-block px-3 py-1 text-xs font-medium bg-primary/90 text-white rounded-full backdrop-blur-sm">
+          {category}
+        </span>
+      </div>
+    </a>
+    
+    <WishlistButton productId={id} />
+
+    <div class={cardClasses[variant]}>
+      <a href={`/product/${id}`}>
+        <h3 class={`font-semibold text-dark ${titleClasses[variant]} mb-2 line-clamp-2 group-hover:text-primary transition-colors`}>
+          {title}
+        </h3>
+      </a>
+
+      {variant !== 'compact' && (
+        <div class="text-sm text-gray-500 mb-3">
+          Available at {stores.slice(0, 2).join(', ')}
+          {stores.length > 2 && ` and ${stores.length - 2} more`}
+        </div>
+      )}
+
+      <div class="flex items-center justify-between">
+        <p class="text-primary font-bold text-xl">{price}</p>
+        <a 
+          href={`/product/${id}`}
+          class="inline-flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+        >
+          <ShoppingBag class="w-4 h-4" />
+          <span>Buy Now</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

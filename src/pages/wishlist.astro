@@ -1,0 +1,97 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import WishlistEditor from '../components/wishlist/WishlistEditor.astro';
+import WishlistPreview from '../components/wishlist/WishlistPreview.astro';
+import { Share2, Download } from 'lucide-astro';
+---
+
+<Layout title="My Wishlist - GiftGenius">
+  <Header />
+  
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-4xl font-heading font-bold text-dark">My Wishlist</h1>
+      <div class="flex space-x-4">
+        <button
+          id="shareWishlist"
+          class="inline-flex items-center space-x-2 bg-secondary text-white px-6 py-3 rounded-lg font-medium hover:bg-secondary/90 transition-colors"
+        >
+          <Share2 class="w-5 h-5" />
+          <span>Share Wishlist</span>
+        </button>
+        <button
+          id="downloadWishlist"
+          class="inline-flex items-center space-x-2 bg-accent text-white px-6 py-3 rounded-lg font-medium hover:bg-accent/90 transition-colors"
+        >
+          <Download class="w-5 h-5" />
+          <span>Download PDF</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-[350px,1fr] gap-8">
+      <WishlistEditor />
+      <WishlistPreview />
+    </div>
+  </main>
+</Layout>
+
+<script>
+  import { wishlistStore } from '../store/wishlist';
+  import { generateWishlistPDF } from '../utils/pdf';
+
+  // Share wishlist functionality
+  document.getElementById('shareWishlist')?.addEventListener('click', () => {
+    const wishlistUrl = `${window.location.origin}/wishlist?share=${btoa(JSON.stringify(wishlistStore.get()))}`;
+    navigator.clipboard.writeText(wishlistUrl).then(() => {
+      alert('Wishlist URL copied to clipboard!');
+    });
+  });
+
+  // Download wishlist as PDF
+  document.getElementById('downloadWishlist')?.addEventListener('click', async () => {
+    const loadingText = document.createElement('span');
+    loadingText.textContent = 'Generating PDF...';
+    const button = document.getElementById('downloadWishlist');
+    const originalContent = button?.innerHTML;
+    
+    if (button) {
+      button.innerHTML = '';
+      button.appendChild(loadingText);
+      button.disabled = true;
+    }
+
+    try {
+      const pdf = await generateWishlistPDF();
+      if (pdf) {
+        const occasion = document.getElementById('previewTitle')?.textContent || 'Wishlist';
+        pdf.save(`${occasion.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.pdf`);
+      } else {
+        throw new Error('Failed to generate PDF');
+      }
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      alert('Sorry, there was an error generating the PDF. Please try again.');
+    } finally {
+      if (button && originalContent) {
+        button.innerHTML = originalContent;
+        button.disabled = false;
+      }
+    }
+  });
+
+  // Handle shared wishlist
+  const urlParams = new URLSearchParams(window.location.search);
+  const sharedWishlist = urlParams.get('share');
+  if (sharedWishlist) {
+    try {
+      const wishlistIds = JSON.parse(atob(sharedWishlist));
+      if (Array.isArray(wishlistIds)) {
+        wishlistStore.set(wishlistIds);
+      }
+    } catch (error) {
+      console.error('Error loading shared wishlist:', error);
+    }
+  }
+</script>

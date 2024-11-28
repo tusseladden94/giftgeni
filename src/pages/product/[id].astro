@@ -1,0 +1,88 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import { products } from '../../data/categories';
+import WishlistButton from '../../components/WishlistButton.astro';
+import { ShoppingBag, Award, Truck } from 'lucide-astro';
+
+export function getStaticPaths() {
+  return products.map(product => ({
+    params: { id: product.id.toString() },
+    props: { product }
+  }));
+}
+
+const { product } = Astro.props;
+
+const retailers = [
+  { name: 'SuperStore', price: product.price, rating: 4.8, delivery: 'Free 2-day shipping' },
+  { name: 'MegaMart', price: (parseFloat(product.price.replace('$', '')) + 5).toFixed(2), rating: 4.6, delivery: 'Free shipping over $50' },
+  { name: 'GiftWorld', price: (parseFloat(product.price.replace('$', '')) - 2).toFixed(2), rating: 4.5, delivery: '$4.99 shipping' },
+];
+---
+
+<Layout title={`${product.title} - GiftGenius`}>
+  <Header />
+  
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid lg:grid-cols-2 gap-12">
+      <div class="relative">
+        <div class="aspect-square rounded-2xl overflow-hidden bg-white">
+          <img 
+            src={product.image} 
+            alt={product.title} 
+            class="w-full h-full object-cover animate-fade-in" 
+          />
+        </div>
+        <WishlistButton productId={product.id} />
+      </div>
+
+      <div class="space-y-8">
+        <div class="animate-slide-up">
+          <span class="inline-block px-3 py-1 text-sm font-medium bg-accent/90 text-white rounded-full">
+            {product.category}
+          </span>
+          <h1 class="text-4xl font-heading font-bold text-dark mt-4 mb-4">{product.title}</h1>
+          <p class="text-3xl font-bold text-primary mb-6">{product.price}</p>
+          <p class="text-gray-600 leading-relaxed">
+            Experience the perfect blend of style and functionality with this amazing gift. 
+            Ideal for those who appreciate quality and innovation.
+          </p>
+        </div>
+
+        <div class="border-t border-gray-200 pt-8 animate-slide-up [animation-delay:200ms]">
+          <h2 class="text-2xl font-heading font-bold mb-6">Best Places to Buy</h2>
+          <div class="space-y-4">
+            {retailers.map(retailer => (
+              <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="font-semibold text-lg">{retailer.name}</h3>
+                  <span class="flex items-center text-sm text-gray-600">
+                    <Award class="w-4 h-4 text-accent mr-1" />
+                    {retailer.rating} Rating
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-xl font-bold text-primary">${retailer.price}</p>
+                    <p class="text-sm text-gray-600 flex items-center mt-1">
+                      <Truck class="w-4 h-4 mr-1" />
+                      {retailer.delivery}
+                    </p>
+                  </div>
+                  <a 
+                    href="#" 
+                    class="inline-flex items-center space-x-2 bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                  >
+                    <ShoppingBag class="w-5 h-5" />
+                    <span>Buy Now</span>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>

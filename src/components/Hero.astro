@@ -1,0 +1,65 @@
+---
+import SearchBar from './ui/SearchBar.astro';
+import { Shield, Package, Clock } from 'lucide-astro';
+import { products } from '../data/categories';
+
+const features = [
+  { icon: Shield, text: '100% Original Products' },
+  { icon: Package, text: 'Free Shipping Over $50' },
+  { icon: Clock, text: '24/7 Support' },
+];
+
+// Use the first product as the featured product
+const featuredProduct = products[0];
+---
+
+<section class="relative bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+  <div class="absolute inset-0 opacity-5 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
+  
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="text-left">
+        <h1 class="text-5xl md:text-6xl font-heading font-bold mb-6 leading-tight">
+          <span class="text-primary">Smart</span> gifts for<br/>
+          your comfort and<br/>
+          <span class="text-secondary">convenience</span>
+        </h1>
+        <p class="text-xl text-gray-600 mb-8 max-w-2xl">
+          Discover the perfect gifts with the latest technology and sophisticated design.
+        </p>
+        <SearchBar />
+        
+        <div class="grid grid-cols-3 gap-6 mt-12">
+          {features.map(({ icon: Icon, text }) => (
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Icon class="w-5 h-5 text-primary" />
+              </div>
+              <span class="text-sm font-medium text-gray-600">{text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="relative hidden lg:block">
+        <div class="absolute -right-20 top-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-100 rounded-full opacity-20 blur-3xl animate-pulse-slow"></div>
+        <div class="relative z-10 bg-white rounded-3xl p-8 shadow-lg transform hover:scale-105 transition-transform duration-500">
+          <img 
+            src={featuredProduct.image}
+            alt={featuredProduct.title}
+            class="w-full h-auto max-w-lg mx-auto animate-float rounded-2xl" 
+          />
+          <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white px-6 py-3 rounded-full shadow-lg">
+            <p class="font-semibold text-primary whitespace-nowrap">Featured Product</p>
+          </div>
+        </div>
+        <div class="absolute top-1/2 left-0 transform -translate-y-1/2">
+          <div class="w-32 h-32 bg-primary/10 rounded-full animate-float [animation-delay:1s]"></div>
+        </div>
+        <div class="absolute bottom-0 right-0">
+          <div class="w-24 h-24 bg-secondary/10 rounded-full animate-float [animation-delay:2s]"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

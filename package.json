@@ -1,0 +1,31 @@
+{
+  "name": "@example/basics",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^4.15.3",
+    "@astrojs/tailwind": "^5.1.0",
+    "tailwindcss": "^3.4.1",
+    "@fontsource/poppins": "^5.0.8",
+    "@fontsource/outfit": "^5.0.8",
+    "lucide-astro": "^0.359.0",
+    "nanostores": "^0.9.5",
+    "jspdf": "^2.5.1",
+    "html2canvas": "^1.4.1",
+    "paapi5-nodejs-sdk": "^1.1.0",
+    "node-cache": "^5.1.2",
+    "zod": "^3.22.4",
+    "cookie": "^0.6.0",
+    "@supabase/supabase-js": "^2.39.3",
+    "cheerio": "1.0.0-rc.12",
+    "node-fetch": "^3.3.2"
+  }
+}

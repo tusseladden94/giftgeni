@@ -1,0 +1,35 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import GiftCard from '../../components/GiftCard.astro';
+import { featuredCategories, products } from '../../data/categories';
+
+export function getStaticPaths() {
+  return featuredCategories.map(category => ({
+    params: { id: category.id },
+    props: { category }
+  }));
+}
+
+const { category } = Astro.props;
+const categoryProducts = products.filter(product => 
+  product.tags.some(tag => category.subcategories.includes(tag))
+);
+---
+
+<Layout title={`${category.name} Gifts - GiftGenius`}>
+  <Header />
+  
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <header class="mb-12">
+      <h1 class="text-4xl font-heading font-bold text-dark mb-4">{category.name} Gifts</h1>
+      <p class="text-gray-600">Browse our curated selection of {category.name.toLowerCase()} gifts</p>
+    </header>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {categoryProducts.map(product => (
+        <GiftCard {...product} />
+      ))}
+    </div>
+  </main>
+</Layout>

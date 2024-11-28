@@ -1,0 +1,63 @@
+---
+import { Users, Heart, Gift, Cake } from 'lucide-astro';
+
+const categories = [
+  {
+    title: 'By Relationship',
+    items: ['Partner', 'Parents', 'Friends', 'Colleagues'],
+    icon: Heart,
+    color: 'pink'
+  },
+  {
+    title: 'By Age',
+    items: ['Kids (0-12)', 'Teens (13-19)', 'Adults (20+)', 'Seniors'],
+    icon: Users,
+    color: 'blue'
+  },
+  {
+    title: 'By Occasion',
+    items: ['Birthday', 'Wedding', 'Anniversary', 'Graduation'],
+    icon: Cake,
+    color: 'purple'
+  },
+  {
+    title: 'By Interest',
+    items: ['Tech', 'Sports', 'Art', 'Cooking'],
+    icon: Gift,
+    color: 'green'
+  }
+];
+
+const colorClasses = {
+  pink: 'bg-pink-50 text-pink-600 border-pink-100',
+  blue: 'bg-blue-50 text-blue-600 border-blue-100',
+  purple: 'bg-purple-50 text-purple-600 border-purple-100',
+  green: 'bg-green-50 text-green-600 border-green-100'
+};
+---
+
+<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+  {categories.map(({ title, items, icon: Icon, color }) => (
+    <div class={`p-6 rounded-2xl border ${colorClasses[color]}`}>
+      <div class="flex items-center space-x-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center">
+          <Icon class="w-5 h-5" />
+        </div>
+        <h3 class="font-heading font-semibold">{title}</h3>
+      </div>
+      <ul class="space-y-2">
+        {items.map(item => (
+          <li>
+            <a 
+              href={`/gifts/${item.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+              class="text-gray-600 hover:text-primary transition-colors flex items-center justify-between"
+            >
+              {item}
+              <span class="text-sm text-gray-400">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</div>

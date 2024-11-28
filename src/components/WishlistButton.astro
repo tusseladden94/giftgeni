@@ -1,0 +1,45 @@
+---
+import { Heart } from 'lucide-astro';
+
+interface Props {
+  productId: number;
+}
+
+const { productId } = Astro.props;
+---
+
+<button
+  data-wishlist-button
+  data-product-id={productId}
+  class="absolute top-4 right-4 p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-primary transition-colors group"
+>
+  <Heart
+    class="w-5 h-5 text-primary group-hover:text-white transition-colors"
+    data-wishlist-icon
+  />
+</button>
+
+<script>
+  import { wishlistStore, toggleWishlist } from '../store/wishlist';
+
+  const buttons = document.querySelectorAll('[data-wishlist-button]');
+  
+  buttons.forEach(button => {
+    const productId = Number(button.getAttribute('data-product-id'));
+    const icon = button.querySelector('[data-wishlist-icon]');
+    
+    wishlistStore.subscribe(wishlist => {
+      if (wishlist.includes(productId)) {
+        icon?.classList.add('fill-current');
+      } else {
+        icon?.classList.remove('fill-current');
+      }
+    });
+
+    button.addEventListener('click', () => {
+      toggleWishlist(productId);
+      button.classList.add('scale-110');
+      setTimeout(() => button.classList.remove('scale-110'), 200);
+    });
+  });
+</script>

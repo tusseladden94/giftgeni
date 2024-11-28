@@ -1,0 +1,49 @@
+---
+import { CheckCircle, ShoppingBag, TrendingUp } from 'lucide-astro';
+---
+
+<section class="bg-gradient-to-br from-secondary to-primary text-white py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <h2 class="text-4xl font-heading font-bold mb-6">Partner With GiftGenius</h2>
+        <p class="text-xl mb-8">Showcase your products to thousands of gift-seekers and boost your holiday sales.</p>
+        <ul class="space-y-4 mb-8">
+          {['Reach targeted gift shoppers', 'Increase holiday revenue', 'Brand visibility', 'Detailed analytics'].map(benefit => (
+            <li class="flex items-center">
+              <CheckCircle class="w-6 h-6 mr-3 text-accent" />
+              <span>{benefit}</span>
+            </li>
+          ))}
+        </ul>
+        <a href="/retailers" class="inline-block bg-white text-primary font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition-colors">
+          Join as Retailer
+        </a>
+      </div>
+      <div class="relative">
+        <div class="bg-white/10 backdrop-blur-sm p-8 rounded-xl">
+          <div class="space-y-6">
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+                <ShoppingBag class="w-6 h-6" />
+              </div>
+              <div>
+                <h3 class="font-semibold">10k+ Daily Visitors</h3>
+                <p class="text-white/80">Active gift shoppers</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+                <TrendingUp class="w-6 h-6" />
+              </div>
+              <div>
+                <h3 class="font-semibold">35% Conversion Rate</h3>
+                <p class="text-white/80">High purchase intent</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

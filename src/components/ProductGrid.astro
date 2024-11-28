@@ -1,0 +1,41 @@
+---
+import GiftCard from './GiftCard.astro';
+import { ArrowRight } from 'lucide-astro';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  products: any[];
+  variant?: 'default' | 'featured' | 'compact';
+}
+
+const { title, subtitle, products, variant = 'default' } = Astro.props;
+
+const gridClasses = {
+  default: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8',
+  featured: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10',
+  compact: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4',
+};
+---
+
+<section class="mb-24">
+  <div class="flex justify-between items-end mb-12">
+    <div>
+      <h2 class="text-4xl font-heading font-bold text-dark mb-3">{title}</h2>
+      {subtitle && <p class="text-gray-600 text-lg">{subtitle}</p>}
+    </div>
+    <a 
+      href="/products" 
+      class="group inline-flex items-center space-x-2 text-primary font-semibold hover:text-primary/80 transition-colors"
+    >
+      <span>View all</span>
+      <ArrowRight class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+    </a>
+  </div>
+
+  <div class={`grid ${gridClasses[variant]}`}>
+    {products.map(product => (
+      <GiftCard {...product} variant={variant} />
+    ))}
+  </div>
+</section>

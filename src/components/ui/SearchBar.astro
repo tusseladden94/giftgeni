@@ -1,0 +1,17 @@
+---
+import { Search } from 'lucide-astro';
+---
+
+<form action="/search" class="max-w-2xl mx-auto relative">
+  <div class="relative">
+    <input
+      type="search"
+      name="q"
+      placeholder="Search for gifts..."
+      class="w-full px-6 py-4 rounded-full bg-white/90 backdrop-blur-sm text-dark placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/50"
+    />
+    <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-primary">
+      <Search class="w-5 h-5" />
+    </button>
+  </div>
+</form>

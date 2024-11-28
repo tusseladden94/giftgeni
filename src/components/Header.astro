@@ -1,0 +1,47 @@
+---
+import { Heart, Settings } from 'lucide-astro';
+---
+
+<header class="bg-white border-b border-gray-100">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="flex items-center space-x-12">
+      <a href="/" class="text-2xl font-heading font-bold text-primary">GiftGenius</a>
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="/categories" class="text-dark hover:text-primary font-medium transition-colors">Categories</a>
+        <a href="/trending" class="text-dark hover:text-primary font-medium transition-colors">Trending</a>
+        <a href="/deals" class="text-dark hover:text-primary font-medium transition-colors">Deals</a>
+        <a href="/new" class="text-dark hover:text-primary font-medium transition-colors">New Arrivals</a>
+      </div>
+    </div>
+    <div class="flex items-center space-x-4">
+      <a 
+        href="/wishlist" 
+        class="relative group p-2 text-gray-500 hover:text-primary transition-all duration-300"
+        data-wishlist-count
+      >
+        <Heart class="w-6 h-6 group-hover:scale-110 transition-transform" />
+        <span class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">0</span>
+        <span class="absolute top-full right-0 mt-1 px-2 py-1 text-xs font-medium text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">My Wishlist</span>
+      </a>
+      <a 
+        href="/admin/login" 
+        class="p-2 text-gray-500 hover:text-primary transition-colors"
+        title="Admin Panel"
+      >
+        <Settings class="w-6 h-6" />
+      </a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  import { wishlistStore } from '../store/wishlist';
+
+  // Update wishlist count in header
+  const wishlistCount = document.querySelector('[data-wishlist-count] span');
+  if (wishlistCount) {
+    wishlistStore.subscribe(wishlist => {
+      wishlistCount.textContent = wishlist.length.toString();
+    });
+  }
+</script>

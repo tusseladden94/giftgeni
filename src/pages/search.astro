@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import SearchBar from '../components/ui/SearchBar.astro';
+import GiftCard from '../components/GiftCard.astro';
+import { products } from '../data/categories';
+
+const query = Astro.url.searchParams.get('q')?.toLowerCase() || '';
+const searchResults = products.filter(product => 
+  product.title.toLowerCase().includes(query) ||
+  product.category.toLowerCase().includes(query) ||
+  product.tags.some(tag => tag.toLowerCase().includes(query))
+);
+---
+
+<Layout title="Search Results - GiftGenius">
+  <Header />
+  
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-12">
+      <SearchBar />
+    </div>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-heading font-bold text-dark mb-4">
+        {query ? `Search Results for "${query}"` : 'All Gifts'}
+      </h1>
+      <p class="text-gray-600">{searchResults.length} gifts found</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {searchResults.map(product => (
+        <GiftCard {...product} />
+      ))}
+    </div>
+  </main>
+</Layout>

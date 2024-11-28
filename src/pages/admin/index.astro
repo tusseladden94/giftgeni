@@ -1,0 +1,9 @@
+---
+import { requireAuth } from '../../middleware/auth';
+
+// Redirect to products page if authenticated
+const authRedirect = requireAuth(Astro);
+if (authRedirect) return authRedirect;
+
+return Astro.redirect('/admin/products');
+---

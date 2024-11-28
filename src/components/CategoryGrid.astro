@@ -1,0 +1,42 @@
+---
+import { 
+  Watch, 
+  Smartphone, 
+  Headphones, 
+  Camera, 
+  Laptop, 
+  Gamepad 
+} from 'lucide-astro';
+
+const categories = [
+  { id: 'watches', name: 'Smart Watches', icon: Watch, color: 'blue' },
+  { id: 'phones', name: 'Smartphones', icon: Smartphone, color: 'pink' },
+  { id: 'audio', name: 'Audio', icon: Headphones, color: 'purple' },
+  { id: 'cameras', name: 'Cameras', icon: Camera, color: 'orange' },
+  { id: 'laptops', name: 'Laptops', icon: Laptop, color: 'green' },
+  { id: 'gaming', name: 'Gaming', icon: Gamepad, color: 'red' },
+];
+
+const colorClasses = {
+  blue: 'bg-blue-100 text-blue-600',
+  pink: 'bg-pink-100 text-pink-600',
+  purple: 'bg-purple-100 text-purple-600',
+  orange: 'bg-orange-100 text-orange-600',
+  green: 'bg-green-100 text-green-600',
+  red: 'bg-red-100 text-red-600',
+};
+---
+
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+  {categories.map(({ id, name, icon: Icon, color }) => (
+    <a href={`/categories/${id}`} class="group">
+      <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-center group-hover:-translate-y-1">
+        <div class={`inline-flex items-center justify-center w-16 h-16 mb-4 rounded-xl ${colorClasses[color]} group-hover:scale-110 transition-transform duration-300`}>
+          <Icon class="w-8 h-8" />
+        </div>
+        <h3 class="font-heading font-semibold text-dark mb-2">{name}</h3>
+        <p class="text-sm text-gray-500">View All</p>
+      </div>
+    </a>
+  ))}
+</div>

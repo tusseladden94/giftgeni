@@ -1,0 +1,160 @@
+---
+import { Star, Heart } from 'lucide-astro';
+
+interface Props {
+  showPrices?: boolean;
+  showStores?: boolean;
+  showNotes?: boolean;
+  layout?: 'grid' | 'list' | 'compact';
+}
+
+const { 
+  showPrices = true, 
+  showStores = true, 
+  showNotes = true, 
+  layout = 'list' 
+} = Astro.props;
+---
+
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+  <!-- A4 Preview Container -->
+  <div class="aspect-[1/1.4142] w-full bg-white relative">
+    <!-- Preview Content -->
+    <div id="wishlistPreview" class="absolute inset-0 p-8">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-heading font-bold text-primary">
+          <span id="previewTitle">My Wishes for Christmas</span>
+        </h2>
+        <p class="text-gray-600 mt-2">Created with GiftGenius</p>
+      </div>
+
+      <div id="wishlistContent" class="grid gap-6">
+        <!-- Items will be inserted here by JavaScript -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<template id="wishlistItemTemplate">
+  <div class="flex items-center p-4 border border-gray-100 rounded-lg hover:shadow-sm transition-shadow">
+    <div class="relative">
+      <img class="w-20 h-20 object-cover rounded-lg" src="" alt="" />
+      <button 
+        class="absolute -top-2 -right-2 w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary/90 transition-colors"
+        data-star-button
+      >
+        <Star class="w-4 h-4" />
+      </button>
+    </div>
+    <div class="flex-1 ml-4">
+      <h3 class="font-semibold text-lg mb-1"></h3>
+      <div class="flex items-center space-x-2 text-sm text-gray-600">
+        <span data-price></span>
+        <span data-store></span>
+      </div>
+      <p class="text-sm text-gray-500 mt-1" data-notes></p>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { wishlistStore } from '../../store/wishlist';
+  import { products } from '../../data/categories';
+
+  let currentLayout = 'list';
+  let showPrices = true;
+  let showStores = true;
+  let showNotes = true;
+  let starredItems = new Set();
+
+  function updatePreview() {
+    const wishlistIds = wishlistStore.get();
+    const wishlistProducts = products.filter(p => wishlistIds.includes(p.id));
+    const container = document.getElementById('wishlistContent');
+    
+    if (!container) return;
+    
+    container.innerHTML = '';
+    container.className = `grid gap-6 ${getLayoutClasses()}`;
+
+    wishlistProducts
+      .sort((a, b) => starredItems.has(b.id) ? 1 : -1)
+      .forEach(product => {
+        const template = document.getElementById('wishlistItemTemplate') as HTMLTemplateElement;
+        const clone = template.content.cloneNode(true) as DocumentFragment;
+        
+        const item = clone.querySelector('div');
+        const img = clone.querySelector('img');
+        const title = clone.querySelector('h3');
+        const price = clone.querySelector('[data-price]');
+        const store = clone.querySelector('[data-store]');
+        const notes = clone.querySelector('[data-notes]');
+        const starButton = clone.querySelector('[data-star-button]');
+        
+        if (img) {
+          img.src = product.image;
+          img.alt = product.title;
+        }
+        if (title) title.textContent = product.title;
+        if (price) price.textContent = showPrices ? product.price : '';
+        if (store) store.textContent = showStores ? 'Available at Amazon' : '';
+        if (notes) notes.textContent = showNotes ? 'Click to add notes...' : '';
+        
+        if (starButton) {
+          starButton.classList.toggle('bg-yellow-400', starredItems.has(product.id));
+          starButton.addEventListener('click', () => {
+            if (starredItems.has(product.id)) {
+              starredItems.delete(product.id);
+            } else {
+              starredItems.add(product.id);
+            }
+            updatePreview();
+          });
+        }
+        
+        container.appendChild(clone);
+    });
+  }
+
+  function getLayoutClasses() {
+    switch (currentLayout) {
+      case 'grid': return 'grid-cols-2';
+      case 'compact': return 'grid-cols-1 gap-2';
+      default: return 'grid-cols-1';
+    }
+  }
+
+  // Listen for control updates
+  document.addEventListener('wishlist:update', ((event: CustomEvent) => {
+    const { type, value } = event.detail;
+    
+    switch (type) {
+      case 'layout':
+        currentLayout = value;
+        break;
+      case 'showPrices':
+        showPrices = value;
+        break;
+      case 'showStores':
+        showStores = value;
+        break;
+      case 'showNotes':
+        showNotes = value;
+        break;
+      case 'occasion':
+      case 'title':
+        const titleElement = document.getElementById('previewTitle');
+        if (titleElement) {
+          titleElement.textContent = value === 'Custom' 
+            ? document.getElementById('customTitle')?.value || 'My Wishlist'
+            : `My Wishes for ${value}`;
+        }
+        break;
+    }
+    
+    updatePreview();
+  }) as EventListener);
+
+  // Initialize preview
+  wishlistStore.subscribe(updatePreview);
+</script>

@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import CategoryGrid from '../components/CategoryGrid.astro';
+import GiftCategories from '../components/GiftCategories.astro';
+import ProductGrid from '../components/ProductGrid.astro';
+import RetailerCTA from '../components/RetailerCTA.astro';
+import { products } from '../data/categories';
+
+// Filter products for different sections
+const trendingProducts = products.slice(0, 3);
+const newArrivals = products.slice(3, 9);
+const budgetFinds = products.filter(p => parseFloat(p.price.replace('$', '')) < 50);
+---
+
+<Layout title="GiftGenius - Smart Gifts for Everyone">
+  <Header />
+  <Hero />
+  
+  <main>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section class="py-16">
+        <h2 class="text-3xl font-heading font-bold text-dark mb-8">Shop By Category</h2>
+        <CategoryGrid />
+      </section>
+
+      <section class="py-16">
+        <h2 class="text-3xl font-heading font-bold text-dark mb-8">Find The Perfect Gift</h2>
+        <GiftCategories />
+      </section>
+
+      <ProductGrid 
+        title="Trending Now" 
+        subtitle="Most loved gifts this week"
+        products={trendingProducts}
+        variant="featured"
+      />
+
+      <ProductGrid 
+        title="New Arrivals" 
+        subtitle="Fresh picks for you"
+        products={newArrivals}
+        variant="compact"
+      />
+
+      <ProductGrid 
+        title="Budget Finds" 
+        subtitle="Great gifts under $50"
+        products={budgetFinds}
+      />
+    </div>
+
+    <RetailerCTA />
+  </main>
+</Layout>

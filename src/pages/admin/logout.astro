@@ -1,0 +1,7 @@
+---
+// Clear auth cookies and redirect to login
+Astro.cookies.delete('sb-access-token', { path: '/' });
+Astro.cookies.delete('sb-refresh-token', { path: '/' });
+
+return Astro.redirect('/admin/login');
+---

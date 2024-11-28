@@ -1,0 +1,29 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/login"
+  status = 302
+  force = true
+  conditions = {Cookie = ["!adminAuth"]}
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+
+[build.processing]
+  skip_processing = false
+
+[build.processing.html]
+  pretty_urls = true
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Add claim URL for site ownership
+[Settings]
+  ID = "jolly-cheesecake-0bdfb6"
